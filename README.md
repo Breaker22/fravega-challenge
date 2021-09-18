@@ -1,17 +1,22 @@
-# fravegaChallenge
+# Fravega Challenge
 Challenge de fravega
 
 # Servicios
-* /add
-* /find?id=1
-* /update?id=1
-* /delete?id=1
+* GET /?id=1
+* POST /
+* PUT /?id=1
+* DELETE /?id=1
 
 # Dependencias
 * Spring 2.5.4
 * Swagger 2 3.0.0
 * Actuator
 * H2
+
+# Url de Swagger
+```
+http://localhost:8080/swagger-ui.html#
+```
 
 # Ejecucion de proyecto
 ```
