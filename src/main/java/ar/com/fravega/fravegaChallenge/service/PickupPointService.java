@@ -2,6 +2,8 @@ package ar.com.fravega.fravegaChallenge.service;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ import ar.com.fravega.fravegaChallenge.interfaces.PickupPointInterface;
 import ar.com.fravega.fravegaChallenge.repository.NodeRepository;
 import ar.com.fravega.fravegaChallenge.repository.PickupPointRepository;
 import ar.com.fravega.fravegaChallenge.request.PickupPointRequest;
+import ar.com.fravega.fravegaChallenge.utils.LogsUtils;
 
 @Service
 public class PickupPointService implements PickupPointInterface {
@@ -22,6 +25,9 @@ public class PickupPointService implements PickupPointInterface {
 
 	@Autowired
 	private PickupPointRepository pickupPointRepo;
+
+	private static final Logger logger = LoggerFactory.getLogger(PickupPointService.class);
+	private static final String PICKUP_POINT_NOT_FOUND = "No existe el punto de retiro!";
 
 	@Override
 	public Long addPickupPoint(PickupPointRequest pickupPoint) throws BadRequestException {
@@ -37,7 +43,11 @@ public class PickupPointService implements PickupPointInterface {
 		pickupPointRepo.save(newPickupPoint);
 		nodeRepo.save(node);
 
-		return newPickupPoint.getId() + 1L;
+		Long nextPickupPoint = newPickupPoint.getId() + 1L;
+
+		LogsUtils.info(logger, "Punto de Retiro guardado OK con id ".concat(Long.toString(nextPickupPoint)));
+
+		return nextPickupPoint;
 	}
 
 	@Override
@@ -46,7 +56,8 @@ public class PickupPointService implements PickupPointInterface {
 		Optional<PickupPoint> oldPickupPoint = pickupPointRepo.findById(id);
 
 		if (!oldPickupPoint.isPresent()) {
-			throw new PickupPointNotFoundException("No existe el punto de retiro!");
+			LogsUtils.error(logger, PICKUP_POINT_NOT_FOUND);
+			throw new PickupPointNotFoundException(PICKUP_POINT_NOT_FOUND);
 		}
 
 		PickupPoint newPickupPoint = new PickupPoint();
@@ -57,6 +68,8 @@ public class PickupPointService implements PickupPointInterface {
 		newPickupPoint.setLongitude(pickupPoint.getLongitude());
 
 		pickupPointRepo.save(newPickupPoint);
+
+		LogsUtils.info(logger, "Update de Punto de Retiro OK");
 	}
 
 	@Override
@@ -64,10 +77,13 @@ public class PickupPointService implements PickupPointInterface {
 		Optional<PickupPoint> pickupPoint = pickupPointRepo.findById(id);
 
 		if (!pickupPoint.isPresent()) {
-			throw new PickupPointNotFoundException("No existe el punto de retiro!");
+			LogsUtils.error(logger, PICKUP_POINT_NOT_FOUND);
+			throw new PickupPointNotFoundException(PICKUP_POINT_NOT_FOUND);
 		}
 
 		pickupPointRepo.delete(pickupPoint.get());
+
+		LogsUtils.info(logger, "Punto de retiro borrado OK");
 	}
 
 }

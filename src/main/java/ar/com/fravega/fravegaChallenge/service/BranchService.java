@@ -3,6 +3,8 @@ package ar.com.fravega.fravegaChallenge.service;
 import java.text.ParseException;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import ar.com.fravega.fravegaChallenge.repository.BranchRepository;
 import ar.com.fravega.fravegaChallenge.repository.NodeRepository;
 import ar.com.fravega.fravegaChallenge.request.BranchRequest;
 import ar.com.fravega.fravegaChallenge.utils.DateUtils;
+import ar.com.fravega.fravegaChallenge.utils.LogsUtils;
 
 @Service
 public class BranchService implements BranchInterface {
@@ -24,6 +27,9 @@ public class BranchService implements BranchInterface {
 
 	@Autowired
 	private BranchRepository branchRepo;
+
+	private static final Logger logger = LoggerFactory.getLogger(BranchService.class);
+	private static final String BRANCH_NOT_FOUND = "No existe la sucursal!";
 
 	@Override
 	public Long addBranch(BranchRequest branch) throws BadRequestException {
@@ -35,6 +41,7 @@ public class BranchService implements BranchInterface {
 		try {
 			newBranch.setDateAttention(DateUtils.getParsedDate(branch.getDateAttention()));
 		} catch (ParseException ex) {
+			LogsUtils.error(logger, ex.getMessage());
 			throw new BadRequestException("El campo dateAttention debe tener el formato yyyy-MM-dd.");
 		}
 
@@ -46,7 +53,11 @@ public class BranchService implements BranchInterface {
 		branchRepo.save(newBranch);
 		nodeRepo.save(node);
 
-		return newBranch.getId() + 1L;
+		Long nextBranch = newBranch.getId() + 1L;
+
+		LogsUtils.info(logger, "Sucursal guardada OK con id ".concat(Long.toString(nextBranch)));
+
+		return nextBranch;
 	}
 
 	@Override
@@ -56,13 +67,15 @@ public class BranchService implements BranchInterface {
 		try {
 			newBranch.setDateAttention(DateUtils.getParsedDate(branch.getDateAttention()));
 		} catch (ParseException ex) {
+			LogsUtils.error(logger, ex.getMessage());
 			throw new BadRequestException("El campo dateAttention debe tener el formato yyyy-MM-dd.");
 		}
 
 		Optional<Branch> oldBranch = branchRepo.findById(id);
 
 		if (!oldBranch.isPresent()) {
-			throw new BranchNotFoundException("No existe la sucursal!");
+			LogsUtils.error(logger, BRANCH_NOT_FOUND);
+			throw new BranchNotFoundException(BRANCH_NOT_FOUND);
 		}
 
 		newBranch.setId(id);
@@ -71,6 +84,8 @@ public class BranchService implements BranchInterface {
 		newBranch.setLongitude(branch.getLongitude());
 
 		branchRepo.save(newBranch);
+		
+		LogsUtils.info(logger, "Update de Sucursal OK");
 	}
 
 	@Override
@@ -78,10 +93,13 @@ public class BranchService implements BranchInterface {
 		Optional<Branch> branch = branchRepo.findById(id);
 
 		if (!branch.isPresent()) {
-			throw new BranchNotFoundException("No existe la sucursal!");
+			LogsUtils.error(logger, BRANCH_NOT_FOUND);
+			throw new BranchNotFoundException(BRANCH_NOT_FOUND);
 		}
 
 		branchRepo.delete(branch.get());
+		
+		LogsUtils.info(logger, "Sucursal borrada OK");
 	}
 
 }
