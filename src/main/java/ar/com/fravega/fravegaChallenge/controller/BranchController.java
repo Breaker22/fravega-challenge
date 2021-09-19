@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +22,7 @@ import ar.com.fravega.fravegaChallenge.request.BranchRequest;
 import ar.com.fravega.fravegaChallenge.utils.ValidateRequestUtils;
 
 @RestController
+@RequestMapping("/branch")
 public class BranchController {
 
 	@Autowired
@@ -53,7 +55,7 @@ public class BranchController {
 	}
 
 	@ExceptionHandler(BadRequestException.class)
-	public ResponseEntity<String> dateParseEx(BadRequestException ex) {
+	public ResponseEntity<String> badRequest(BadRequestException ex) {
 		return ResponseEntity.badRequest().body(ex.getMessage());
 	}
 
