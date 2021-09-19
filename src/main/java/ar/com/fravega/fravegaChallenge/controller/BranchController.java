@@ -18,6 +18,7 @@ import ar.com.fravega.fravegaChallenge.exception.BadRequestException;
 import ar.com.fravega.fravegaChallenge.exception.BranchNotFoundException;
 import ar.com.fravega.fravegaChallenge.interfaces.BranchInterface;
 import ar.com.fravega.fravegaChallenge.request.BranchRequest;
+import ar.com.fravega.fravegaChallenge.utils.ValidateRequestUtils;
 
 @RestController
 public class BranchController {
@@ -27,6 +28,8 @@ public class BranchController {
 
 	@PostMapping("/")
 	public ResponseEntity<String> addBranch(@Valid @RequestBody BranchRequest branch) throws BadRequestException {
+		ValidateRequestUtils.validateBranchRequest(branch);
+
 		Long id = branchService.addBranch(branch);
 		StringBuilder idBranch = new StringBuilder("El id creado es: ").append(Long.toString(id));
 
