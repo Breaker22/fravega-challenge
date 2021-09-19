@@ -28,7 +28,7 @@ public class BranchController {
 	@Autowired
 	private BranchInterface branchService;
 
-	@PostMapping("/")
+	@PostMapping
 	public ResponseEntity<String> addBranch(@Valid @RequestBody BranchRequest branch) throws BadRequestException {
 		ValidateRequestUtils.validateBranchRequest(branch);
 
@@ -38,7 +38,7 @@ public class BranchController {
 		return new ResponseEntity<String>(idBranch.toString(), HttpStatus.CREATED);
 	}
 
-	@PutMapping("/")
+	@PutMapping
 	public ResponseEntity<String> updateBranch(@Valid @RequestParam(required = true) @PathParam(value = "id") Long id,
 			@Valid @RequestBody BranchRequest branch) throws BadRequestException, BranchNotFoundException {
 		branchService.updateBranch(id, branch);
@@ -46,7 +46,7 @@ public class BranchController {
 		return ResponseEntity.ok().build();
 	}
 
-	@DeleteMapping("/")
+	@DeleteMapping
 	public ResponseEntity<String> deleteBranch(@Valid @RequestParam(required = true) @PathParam(value = "id") Long id)
 			throws BranchNotFoundException {
 		branchService.deleteBranch(id);
