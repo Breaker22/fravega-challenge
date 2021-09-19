@@ -26,7 +26,7 @@ public class BranchService implements BranchInterface {
 	private BranchRepository branchRepo;
 
 	@Override
-	public void addBranch(BranchRequest branch) throws BadRequestException {
+	public Long addBranch(BranchRequest branch) throws BadRequestException {
 		Branch newBranch = new Branch();
 		Node node = new Node();
 
@@ -46,18 +46,19 @@ public class BranchService implements BranchInterface {
 		branchRepo.save(newBranch);
 		nodeRepo.save(node);
 
+		return newBranch.getId() + 1L;
 	}
 
 	@Override
 	public void updateBranch(Long id, BranchRequest branch) throws BadRequestException, BranchNotFoundException {
 		Branch newBranch = new Branch();
-		
+
 		try {
 			newBranch.setDateAttention(DateUtils.getParsedDate(branch.getDateAttention()));
 		} catch (ParseException ex) {
 			throw new BadRequestException("El campo dateAttention debe tener el formato yyyy-MM-dd.");
 		}
-		
+
 		Optional<Branch> oldBranch = branchRepo.findById(id);
 
 		if (!oldBranch.isPresent()) {

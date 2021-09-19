@@ -27,9 +27,10 @@ public class BranchController {
 
 	@PostMapping("/")
 	public ResponseEntity<String> addBranch(@Valid @RequestBody BranchRequest branch) throws BadRequestException {
-		branchService.addBranch(branch);
+		Long id = branchService.addBranch(branch);
+		StringBuilder idBranch = new StringBuilder("El id creado es: ").append(Long.toString(id));
 
-		return new ResponseEntity<String>(HttpStatus.CREATED);
+		return new ResponseEntity<String>(idBranch.toString(), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/")
@@ -37,7 +38,7 @@ public class BranchController {
 			@Valid @RequestBody BranchRequest branch) throws BadRequestException, BranchNotFoundException {
 		branchService.updateBranch(id, branch);
 
-		return new ResponseEntity<String>(HttpStatus.OK);
+		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping("/")
@@ -45,9 +46,9 @@ public class BranchController {
 			throws BranchNotFoundException {
 		branchService.deleteBranch(id);
 
-		return new ResponseEntity<String>(HttpStatus.OK);
+		return ResponseEntity.ok().build();
 	}
-	
+
 	@ExceptionHandler(BadRequestException.class)
 	public ResponseEntity<String> dateParseEx(BadRequestException ex) {
 		return ResponseEntity.badRequest().body(ex.getMessage());

@@ -6,7 +6,7 @@ import ar.com.fravega.fravegaChallenge.request.BranchRequest;
 
 public interface BranchInterface {
 
-	void addBranch(BranchRequest branch) throws BadRequestException;
+	Long addBranch(BranchRequest branch) throws BadRequestException;
 
 	void updateBranch(Long id, BranchRequest branch) throws BadRequestException, BranchNotFoundException;
 
