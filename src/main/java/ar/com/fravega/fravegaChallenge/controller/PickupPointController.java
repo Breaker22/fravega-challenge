@@ -4,6 +4,7 @@ import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,24 +29,35 @@ public class PickupPointController {
 	private PickupPointInterface pickupPointService;
 
 	@PostMapping
-	public void addPickupPoint(@Valid @RequestBody PickupPointRequest pickupPoint) throws BadRequestException {
+	public ResponseEntity<String> addPickupPoint(@Valid @RequestBody PickupPointRequest pickupPoint)
+			throws BadRequestException {
 		ValidateRequestUtils.validatePickupPointRequest(pickupPoint);
 
-		pickupPointService.addPickupPoint(pickupPoint);
+		Long id = pickupPointService.addPickupPoint(pickupPoint);
+
+		StringBuilder idPickup = new StringBuilder("El id creado es: ").append(Long.toString(id));
+
+		return new ResponseEntity<String>(idPickup.toString(), HttpStatus.CREATED);
 	}
 
 	@PutMapping
-	public void updatePickupPoint(@Valid @RequestParam(required = true) @PathParam(value = "id") Long id,
+	public ResponseEntity<String> updatePickupPoint(
+			@Valid @RequestParam(required = true) @PathParam(value = "id") Long id,
 			@Valid @RequestBody PickupPointRequest pickupPoint)
 			throws BadRequestException, PickupPointNotFoundException {
 		pickupPointService.updatePickupPoint(id, pickupPoint);
+
+		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping
-	public void deletePickupPoint(@Valid @RequestParam(required = true) @PathParam(value = "id") Long id)
+	public ResponseEntity<String> deletePickupPoint(
+			@Valid @RequestParam(required = true) @PathParam(value = "id") Long id)
 			throws PickupPointNotFoundException {
 
 		pickupPointService.deletePickupPoint(id);
+
+		return ResponseEntity.ok().build();
 	}
 
 	@ExceptionHandler(BadRequestException.class)

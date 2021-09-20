@@ -16,7 +16,13 @@ public class NodeResponse {
 	}
 
 	public NodeResponse(Node node) {
-		this.branch = new BranchResponse(node);
+		if (node.getBranch() != null) {
+			this.branch = new BranchResponse(node);
+		}
+
+		if (node.getPickupPoint() != null) {
+			this.pickupPoint = new PickupPointResponse(node);
+		}
 	}
 
 	public BranchResponse getBranch() {
