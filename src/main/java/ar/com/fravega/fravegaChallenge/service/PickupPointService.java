@@ -16,6 +16,7 @@ import ar.com.fravega.fravegaChallenge.repository.NodeRepository;
 import ar.com.fravega.fravegaChallenge.repository.PickupPointRepository;
 import ar.com.fravega.fravegaChallenge.request.PickupPointRequest;
 import ar.com.fravega.fravegaChallenge.utils.LogsUtils;
+import ar.com.fravega.fravegaChallenge.utils.ValidateRequestUtils;
 
 @Service
 public class PickupPointService implements PickupPointInterface {
@@ -61,14 +62,7 @@ public class PickupPointService implements PickupPointInterface {
 			throw new PickupPointNotFoundException(PICKUP_POINT_NOT_FOUND);
 		}
 
-		PickupPoint newPickupPoint = new PickupPoint();
-
-		newPickupPoint.setId(id);
-		newPickupPoint.setCapacity(pickupPoint.getCapacity());
-		newPickupPoint.setLatitude(pickupPoint.getLatitude());
-		newPickupPoint.setLongitude(pickupPoint.getLongitude());
-
-		pickupPointRepo.save(newPickupPoint);
+		pickupPointRepo.save(ValidateRequestUtils.validateUpdatePickup(id, pickupPoint, oldPickupPoint.get()));
 
 		LogsUtils.info(logger, "Update de Punto de Retiro OK");
 	}

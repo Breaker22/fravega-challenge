@@ -18,6 +18,7 @@ import ar.com.fravega.fravegaChallenge.repository.NodeRepository;
 import ar.com.fravega.fravegaChallenge.request.BranchRequest;
 import ar.com.fravega.fravegaChallenge.utils.DateUtils;
 import ar.com.fravega.fravegaChallenge.utils.LogsUtils;
+import ar.com.fravega.fravegaChallenge.utils.ValidateRequestUtils;
 
 @Service
 public class BranchService implements BranchInterface {
@@ -63,15 +64,6 @@ public class BranchService implements BranchInterface {
 
 	@Override
 	public void updateBranch(Long id, BranchRequest branch) throws BadRequestException, BranchNotFoundException {
-		Branch newBranch = new Branch();
-
-		try {
-			newBranch.setDateAttention(DateUtils.getParsedDate(branch.getDateAttention()));
-		} catch (ParseException ex) {
-			LogsUtils.error(logger, ex.getMessage());
-			throw new BadRequestException("El campo dateAttention debe tener el formato yyyy-MM-dd.");
-		}
-
 		Optional<Branch> oldBranch = branchRepo.findById(id);
 
 		if (!oldBranch.isPresent()) {
@@ -79,12 +71,7 @@ public class BranchService implements BranchInterface {
 			throw new BranchNotFoundException(BRANCH_NOT_FOUND);
 		}
 
-		newBranch.setId(id);
-		newBranch.setAddress(branch.getAddress());
-		newBranch.setLatitude(branch.getLatitude());
-		newBranch.setLongitude(branch.getLongitude());
-
-		branchRepo.save(newBranch);
+		branchRepo.save(ValidateRequestUtils.validateUpdateBranch(logger, id, branch, oldBranch.get()));
 
 		LogsUtils.info(logger, "Update de Sucursal OK");
 	}
