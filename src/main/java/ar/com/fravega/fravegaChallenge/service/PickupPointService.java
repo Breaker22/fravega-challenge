@@ -43,11 +43,12 @@ public class PickupPointService implements PickupPointInterface {
 		pickupPointRepo.save(newPickupPoint);
 		nodeRepo.save(node);
 
-		Long nextPickupPoint = newPickupPoint.getId() + 1L;
+		Long nodeId = node.getId();
 
-		LogsUtils.info(logger, "Punto de Retiro guardado OK con id ".concat(Long.toString(nextPickupPoint)));
+		LogsUtils.info(logger, "Punto de Retiro guardado OK con id ".concat(Long.toString(newPickupPoint.getId())));
+		LogsUtils.info(logger, "Nodo guardado OK con id ".concat(Long.toString(nodeId)));
 
-		return nextPickupPoint;
+		return nodeId;
 	}
 
 	@Override
