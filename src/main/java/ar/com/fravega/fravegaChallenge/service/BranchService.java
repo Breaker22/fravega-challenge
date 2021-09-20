@@ -53,11 +53,12 @@ public class BranchService implements BranchInterface {
 		branchRepo.save(newBranch);
 		nodeRepo.save(node);
 
-		Long nextBranch = newBranch.getId() + 1L;
+		Long nodeId = node.getId();
 
-		LogsUtils.info(logger, "Sucursal guardada OK con id ".concat(Long.toString(nextBranch)));
+		LogsUtils.info(logger, "Sucursal guardada OK con id ".concat(Long.toString(newBranch.getId())));
+		LogsUtils.info(logger, "Nodo guardado OK con id ".concat(Long.toString(nodeId)));
 
-		return nextBranch;
+		return nodeId;
 	}
 
 	@Override
@@ -84,7 +85,7 @@ public class BranchService implements BranchInterface {
 		newBranch.setLongitude(branch.getLongitude());
 
 		branchRepo.save(newBranch);
-		
+
 		LogsUtils.info(logger, "Update de Sucursal OK");
 	}
 
@@ -98,7 +99,7 @@ public class BranchService implements BranchInterface {
 		}
 
 		branchRepo.delete(branch.get());
-		
+
 		LogsUtils.info(logger, "Sucursal borrada OK");
 	}
 
