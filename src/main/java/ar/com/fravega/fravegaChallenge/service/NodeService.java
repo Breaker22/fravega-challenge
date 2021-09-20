@@ -70,8 +70,8 @@ public class NodeService implements NodeInterface {
 			}
 
 		}
-		
-		if(distancePickup < distanceBranch) {
+
+		if (distancePickup.compareTo(distanceBranch) < 0) {
 			return nodeResponse2;
 		}
 
