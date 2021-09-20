@@ -26,6 +26,14 @@ public class NodeController {
 		return ResponseEntity.ok().body(nodeService.findNode(id));
 	}
 
+	@GetMapping("/findNodeByPoint")
+	public ResponseEntity<NodeResponse> findNodeByPoint(
+			@Valid @RequestParam(required = true) @PathParam(value = "latitude") String latitude,
+			@Valid @RequestParam(required = true) @PathParam(value = "longitude") String longitude)
+			throws NodeNotFoudException {
+		return ResponseEntity.ok().body(nodeService.findBranchByPoint(latitude, longitude));
+	}
+
 	@ExceptionHandler(NodeNotFoudException.class)
 	public ResponseEntity<String> notFoundNode() {
 		return ResponseEntity.notFound().build();

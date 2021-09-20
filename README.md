@@ -37,6 +37,29 @@ Content-Type: application/json
     }
 }
 ```
+
+## Servicio de findNodeByPoint
+> Busca el nodo mas cercano con una latitud y longitud
+
+### Request
+`GET /findNodeByPoint?latitude=-31.21&longitude=-20`
+
+```
+curl -i -H 'Accept: application/json' http://localhost:8080/findNodeByPoint?latitude=-31.21&longitude=-20
+```
+
+### Response
+```
+{
+    "branch": {
+        "address": "1111",
+        "dateAttention": "2021-02-12 00:00:00.0",
+        "latitude": "-12",
+        "longitude": "-10"
+    },
+    "pickupPoint": null
+}
+```
 ## Servicio de add Branch
 
 > Guarda una nueva sucursal

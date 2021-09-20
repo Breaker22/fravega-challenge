@@ -12,7 +12,6 @@ import ar.com.fravega.fravegaChallenge.entity.Node;
 import ar.com.fravega.fravegaChallenge.exception.NodeNotFoudException;
 import ar.com.fravega.fravegaChallenge.interfaces.NodeInterface;
 import ar.com.fravega.fravegaChallenge.repository.NodeRepository;
-import ar.com.fravega.fravegaChallenge.response.BranchResponse;
 import ar.com.fravega.fravegaChallenge.response.NodeResponse;
 import ar.com.fravega.fravegaChallenge.utils.LogsUtils;
 import ar.com.fravega.fravegaChallenge.utils.ValidateLatLongUtils;
@@ -42,13 +41,13 @@ public class NodeService implements NodeInterface {
 	}
 
 	@Override
-	public BranchResponse findBranchByPoint(String latitude, String longitude) {
+	public NodeResponse findBranchByPoint(String latitude, String longitude) {
 
 		List<Node> listNodes = nodeRepo.findAll();
 		Double distanceBranch = new Double("0");
 		Double distancePickup = new Double("0");
-		Long idBranch = 0L;
-		Long idPickup = 0L;
+		NodeResponse nodeResponse = new NodeResponse();
+		NodeResponse nodeResponse2 = new NodeResponse();
 
 		for (Node node : listNodes) {
 			Double auxDistanceBranch = new Double("0"); // 0km 0km 20km 20km
@@ -59,27 +58,23 @@ public class NodeService implements NodeInterface {
 						Double.parseDouble(longitude), Double.parseDouble(node.getBranch().getLatitude()),
 						Double.parseDouble(node.getBranch().getLongitude()));
 				auxDistanceBranch = new Double(distanceBranch);
-				idBranch = node.getBranch().getId(); 
+				nodeResponse = new NodeResponse(node);
 			}
 
-			if (node.getPickupPoint() != null && distancePickup < auxDistancePickup) {
+			if (node.getPickupPoint() != null && distancePickup <= auxDistancePickup) {
 				distancePickup = ValidateLatLongUtils.getDistanceFromLatLonInKm(Double.parseDouble(latitude),
 						Double.parseDouble(longitude), Double.parseDouble(node.getPickupPoint().getLatitude()),
 						Double.parseDouble(node.getPickupPoint().getLongitude()));
 				auxDistancePickup = new Double(distancePickup);
-				idPickup = node.getPickupPoint().getId();
+				nodeResponse2 = new NodeResponse(node);
 			}
 
 		}
 		
-		if(idBranch != 0) {
-			//buscar por sucursal
-		}
-		
-		if(idPickup != 0) {
-			//buscar por pickup
+		if(distancePickup < distanceBranch) {
+			return nodeResponse2;
 		}
 
-		return null;
+		return nodeResponse;
 	}
 }

@@ -30,7 +30,7 @@ public class FravegaChallengeApplicationTests {
 		request.setAddress("locura");
 		request.setDateAttention("2021-01-12");
 		request.setLatitude("-30");
-		request.setLongitude("30");
+		request.setLongitude("10");
 
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
@@ -65,8 +65,8 @@ public class FravegaChallengeApplicationTests {
 		PickupPointRequest request = new PickupPointRequest();
 
 		request.setCapacity(100);
-		request.setLatitude("-30");
-		request.setLongitude("30");
+		request.setLatitude("-40");
+		request.setLongitude("35");
 
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
@@ -75,13 +75,20 @@ public class FravegaChallengeApplicationTests {
 
 		mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:8080/pickupPoint")
 				.contentType(MediaType.APPLICATION_JSON).content(requestJson))
-				.andExpect(MockMvcResultMatchers.status().isOk());
+				.andExpect(MockMvcResultMatchers.status().isCreated());
 	}
 
 	@Test
 	void testFindNode() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8080/").param("id", "2")
 				.accept(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	void testDistanceNode() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8080/findNodeByPoint").param("latitude", "-30")
+				.param("longitude", "20").accept(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
 }
