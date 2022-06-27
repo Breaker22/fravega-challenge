@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class NodeResponse {
 
 	@ApiModelProperty(value = "Sucursal", name = "branch", required = true)
-	private BranchResponse branch;
+	private BranchNodeResponse branch;
 
 	@ApiModelProperty(value = "Punto de retiro", name = "pickupPoint", required = true)
 	private PickupPointResponse pickupPoint;
@@ -17,7 +17,7 @@ public class NodeResponse {
 
 	public NodeResponse(Node node) {
 		if (node.getBranch() != null) {
-			this.branch = new BranchResponse(node);
+			this.branch = new BranchNodeResponse(node);
 		}
 
 		if (node.getPickupPoint() != null) {
@@ -25,11 +25,11 @@ public class NodeResponse {
 		}
 	}
 
-	public BranchResponse getBranch() {
+	public BranchNodeResponse getBranch() {
 		return branch;
 	}
 
-	public void setBranch(BranchResponse branch) {
+	public void setBranch(BranchNodeResponse branch) {
 		this.branch = branch;
 	}
 
