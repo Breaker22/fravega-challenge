@@ -12,6 +12,9 @@ public class PickupPointRequest {
 
 	@ApiModelProperty(value = "Longitud", name = "longitude", required = true, example = "-58.4423909,17")
 	private String longitude;
+	
+	@ApiModelProperty(value = "Nodo", name = "Nodo", required = true, example = "1")
+	private Long nodeId;
 
 	public Integer getCapacity() {
 		return capacity;
@@ -35,5 +38,13 @@ public class PickupPointRequest {
 
 	public void setLongitude(String longitude) {
 		this.longitude = longitude;
+	}
+
+	public Long getNodeId() {
+		return nodeId;
+	}
+
+	public void setNodeId(Long nodeId) {
+		this.nodeId = nodeId;
 	}
 }

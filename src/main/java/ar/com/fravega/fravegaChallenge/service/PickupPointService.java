@@ -28,12 +28,15 @@ public class PickupPointService implements PickupPointInterface {
 	private PickupPointRepository pickupPointRepo;
 
 	private static final Logger logger = LoggerFactory.getLogger(PickupPointService.class);
+	private static final String NODE_NOT_FOUND = "No existe el Nodo!";
 	private static final String PICKUP_POINT_NOT_FOUND = "No existe el punto de retiro!";
 
 	@Override
 	public Long addPickupPoint(PickupPointRequest pickupPoint) throws BadRequestException {
 		PickupPoint newPickupPoint = new PickupPoint();
-		Node node = new Node();
+
+		Node node = nodeRepo.findById(pickupPoint.getNodeId())
+				.orElseThrow(() -> new BadRequestException(NODE_NOT_FOUND));
 
 		newPickupPoint.setCapacity(pickupPoint.getCapacity());
 		newPickupPoint.setLatitude(pickupPoint.getLatitude());
@@ -46,8 +49,9 @@ public class PickupPointService implements PickupPointInterface {
 
 		Long nodeId = node.getId();
 
-		LogsUtils.info(logger, "Punto de Retiro guardado OK con id ".concat(Long.toString(newPickupPoint.getId())));
-		LogsUtils.info(logger, "Nodo guardado OK con id ".concat(Long.toString(nodeId)));
+		LogsUtils.info(logger,
+				new StringBuilder("Punto de Retiro guardado OK con id ").append(newPickupPoint.getId()).toString());
+		LogsUtils.info(logger, new StringBuilder("Nodo guardado OK con id ").append(nodeId).toString());
 
 		return nodeId;
 	}

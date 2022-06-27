@@ -10,12 +10,14 @@ public class PickupPointResponse extends PickupPointRequest {
 		super.setCapacity(pickupPoint.getCapacity());
 		super.setLatitude(pickupPoint.getLatitude());
 		super.setLongitude(pickupPoint.getLongitude());
+		super.setNodeId(pickupPoint.getId());
 	}
 
 	public PickupPointResponse(Node node) {
 		super.setCapacity(node.getPickupPoint().getCapacity());
 		super.setLatitude(node.getPickupPoint().getLatitude());
 		super.setLongitude(node.getPickupPoint().getLongitude());
+		super.setNodeId(node.getId());
 	}
 
 }
