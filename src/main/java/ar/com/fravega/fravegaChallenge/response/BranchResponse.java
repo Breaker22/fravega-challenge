@@ -1,23 +1,32 @@
 package ar.com.fravega.fravegaChallenge.response;
 
-import ar.com.fravega.fravegaChallenge.entity.Branch;
-import ar.com.fravega.fravegaChallenge.entity.Node;
-import ar.com.fravega.fravegaChallenge.request.BranchRequest;
+public class BranchResponse {
 
-public class BranchResponse extends BranchRequest {
+	public Long nodeId;
 
-	public BranchResponse(Branch branch) {
-		super.setAddress(branch.getAddress());
-		super.setDateAttention(branch.getDateAttention().toString());
-		super.setLatitude(branch.getLatitude());
-		super.setLongitude(branch.getLongitude());
+	public Long branchId;
+
+	public BranchResponse() {
 	}
 
-	public BranchResponse(Node node) {
-		super.setAddress(node.getBranch().getAddress());
-		super.setDateAttention(node.getBranch().getDateAttention().toString());
-		super.setLatitude(node.getBranch().getLatitude());
-		super.setLongitude(node.getBranch().getLongitude());
+	public BranchResponse(Long nodeId, Long branchId) {
+		this.nodeId = nodeId;
+		this.branchId = branchId;
 	}
 
+	public Long getNodeId() {
+		return nodeId;
+	}
+
+	public void setNodeId(Long nodeId) {
+		this.nodeId = nodeId;
+	}
+
+	public Long getBranchId() {
+		return branchId;
+	}
+
+	public void setBranchId(Long branchId) {
+		this.branchId = branchId;
+	}
 }

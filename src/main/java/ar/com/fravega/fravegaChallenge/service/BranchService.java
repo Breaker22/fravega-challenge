@@ -16,6 +16,7 @@ import ar.com.fravega.fravegaChallenge.interfaces.BranchInterface;
 import ar.com.fravega.fravegaChallenge.repository.BranchRepository;
 import ar.com.fravega.fravegaChallenge.repository.NodeRepository;
 import ar.com.fravega.fravegaChallenge.request.BranchRequest;
+import ar.com.fravega.fravegaChallenge.response.BranchResponse;
 import ar.com.fravega.fravegaChallenge.utils.DateUtils;
 import ar.com.fravega.fravegaChallenge.utils.LogsUtils;
 import ar.com.fravega.fravegaChallenge.utils.ValidateRequestUtils;
@@ -33,7 +34,7 @@ public class BranchService implements BranchInterface {
 	private static final String BRANCH_NOT_FOUND = "No existe la sucursal!";
 
 	@Override
-	public Long addBranch(BranchRequest branch) throws BadRequestException {
+	public BranchResponse addBranch(BranchRequest branch) throws BadRequestException {
 		Branch newBranch = new Branch();
 		Node node = new Node();
 
@@ -54,12 +55,13 @@ public class BranchService implements BranchInterface {
 		branchRepo.save(newBranch);
 		nodeRepo.save(node);
 
-		Long nodeId = node.getId();
+		BranchResponse response = new BranchResponse(node.getId(), newBranch.getId());
 
-		LogsUtils.info(logger, "Sucursal guardada OK con id ".concat(Long.toString(newBranch.getId())));
-		LogsUtils.info(logger, "Nodo guardado OK con id ".concat(Long.toString(nodeId)));
+		LogsUtils.info(logger,
+				new StringBuilder("Sucursal guardada OK con id ").append(response.getBranchId()).toString());
+		LogsUtils.info(logger, new StringBuilder("Nodo guardado OK con id ").append(response.getNodeId()).toString());
 
-		return nodeId;
+		return response;
 	}
 
 	@Override
